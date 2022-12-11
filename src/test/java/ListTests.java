@@ -22,7 +22,9 @@ public class ListTests {
     public void addInList() {
         list.add(int1);
         list.add(int2);
-        Assertions.assertEquals(list.size(), 2);
+        list.add(3);
+        list.add(4);
+        Assertions.assertEquals(list.size(), 4);
     }
 
     @Test

@@ -6,7 +6,7 @@ import org.example.exception.InvalidArrayLengthException;
 
 import java.util.Arrays;
 
-public class List implements IntegerList{
+public class List implements IntegerList {
     private int lengthArray;
     private Integer[] integers;
 
@@ -15,14 +15,53 @@ public class List implements IntegerList{
         integers = new Integer[lengthArray];
     }
 
+    private void grow() {
+        setIntegers(Arrays.copyOf(integers, integers.length + (int) (integers.length * 1.5)));
+    }
+    public static void quickSort(Integer[] arr, int begin, int end) {
+        if (begin < end) {
+            int partitionIndex = partition(arr, begin, end);
+
+            quickSort(arr, begin, partitionIndex - 1);
+            quickSort(arr, partitionIndex + 1, end);
+        }
+    }
+
+    private static int partition(Integer[] arr, int begin, int end) {
+        int pivot = arr[end];
+        int i = (begin - 1);
+
+        for (int j = begin; j < end; j++) {
+            if (arr[j] <= pivot) {
+                i++;
+
+                swapElements(arr, i, j);
+            }
+        }
+
+        swapElements(arr, i + 1, end);
+        return i + 1;
+    }
+
+    private static void swapElements(Integer[] arr, int left, int right) {
+        int temp = arr[left];
+        arr[left] = arr[right];
+        arr[right] = temp;
+    }
+
+
     @Override
     public Integer add(Integer item) {
+        if (integers.length == this.size()) {
+            grow();
+        }
         for (int i = 0; i < integers.length; i++) {
             if (integers[i] == null) {
                 integers[i] = item;
                 return integers[i];
             }
         }
+
         return null;
     }
 
@@ -174,9 +213,8 @@ public class List implements IntegerList{
 
     @Override
     public Integer[] sort() {
-        Integer[] sortInt = toArray();
-        Arrays.sort(sortInt);
-        return sortInt;
+       quickSort(integers, 0, integers.length - 1);
+        return integers;
     }
 
     public void setLengthArray(int lengthArray) {
@@ -185,6 +223,18 @@ public class List implements IntegerList{
         } else {
             throw new InvalidArrayLengthException("Длинна массива не может быть меньше или равна 0");
         }
+    }
+
+    public int getLengthArray() {
+        return lengthArray;
+    }
+
+    public Integer[] getIntegers() {
+        return integers;
+    }
+
+    public void setIntegers(Integer[] integers) {
+        this.integers = integers;
     }
 
     @Override
